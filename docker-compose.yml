@@ -5,9 +5,12 @@ services:
     ports:
       - 9090:9090
     volumes:
+      - ./prometheus_data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+    networks:
+      - localprom
 
   grafana:
     image: grafana/grafana
@@ -15,5 +18,13 @@ services:
       - 3000:3000
     volumes:
       - ./grafana_data:/var/lib/grafana
-#docker-compose up -d
-#docker-compose down
+    networks:
+      - localprom
+    depends_on:
+      - prometheus
+
+networks:
+  localprom:
+    driver: bridge
+# docker-compose up -d (Start services)
+# docker-compose down (Down services)
